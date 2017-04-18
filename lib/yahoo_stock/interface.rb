@@ -6,7 +6,7 @@ require 'net/http'
 require 'observer'
 module YahooStock
    # ==DESCRIPTION:
-   # 
+   #
    # Class to generate the right url and interface with yahoo
    #
   class Interface
@@ -14,13 +14,13 @@ module YahooStock
     class InterfaceError < RuntimeError ; end
 
     BASE_URLS = {
-      :quote        => "http://download.finance.yahoo.com/d/quotes.csv",
-      :history      => "http://ichart.finance.yahoo.com/table.csv",
-      :scrip_symbol => "http://finance.yahoo.com/lookup/all"
+      :quote        => "https://download.finance.yahoo.com/d/quotes.csv",
+      :history      => "https://ichart.finance.yahoo.com/table.csv",
+      :scrip_symbol => "https://finance.yahoo.com/lookup/all"
     } unless defined?(BASE_URLS)
-    
+
     attr_accessor :base_url, :uri_parameters
-    
+
     # Send request to the uri and get results
     def get
       begin
@@ -30,7 +30,7 @@ module YahooStock
       end
       response.code == '200' ? response.body : response_error(response)
     end
-    
+
     # Generates full url to connect to yahoo
     def uri
       raise InterfaceError, 'Base url is require to generate full uri.' unless @base_url
@@ -39,18 +39,18 @@ module YahooStock
       @uri_parameters.each {|k,v| params_with_values << "#{k}=#{v}"}
       URI.encode(@base_url+'?'+params_with_values.join('&'))
     end
-    
+
     # Get result string
     def values
       @values ||= get
     end
-    
+
     def update
       @values = nil
     end
-    
-    private 
-    
+
+    private
+
     # Generate error for debugging when something goes wrong while sending
     # request to yahoo
     def response_error(response)
@@ -66,6 +66,6 @@ module YahooStock
           raise InterfaceError, "Error connecting to #{@base_url} \n\n#{trace}"
       end
     end
-    
+
   end
 end
